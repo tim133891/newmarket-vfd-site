@@ -1,0 +1,17 @@
+services:
+  firedept-app:
+    image: ghcr.io/YOUR_GITHUB_USERNAME/newmarket-vfd:latest
+    container_name: firedept-app
+    restart: unless-stopped
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.firedept.rule=Host(`fire.locinode.xyz`)
+      - traefik.http.routers.firedept.entrypoints=websecure
+      - traefik.http.routers.firedept.tls.certresolver=letsencrypt
+      - traefik.http.services.firedept.loadbalancer.server.port=3000
+
+networks:
+  proxy:
+    external: true

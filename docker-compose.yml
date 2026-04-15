@@ -1,6 +1,6 @@
 services:
   firedept-app:
-    image: ghcr.io/YOUR_GITHUB_USERNAME/newmarket-vfd:latest
+    image: ghcr.io/tim133891/newmarket-vfd:latest
     container_name: firedept-app
     restart: unless-stopped
     networks:

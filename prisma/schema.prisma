@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum StaffRole {
+  ADMIN
+  CHIEF
+  ASSISTANT_CHIEF
+  CAPTAIN
+  LIEUTENANT
+  OFFICER
+  FIREFIGHTER
+  EMT
+  EMR
+  SCENE_SUPPORT
+}
+
+enum ReportStatus {
+  DRAFT
+  SUBMITTED
+  NEEDS_CHANGES
+  APPROVED
+  LOCKED
+}
+
+model StaffUser {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  role         StaffRole
+  active       Boolean     @default(true)
+  lastLogin    DateTime?
+  createdBy    String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  reports      RunReport[] @relation("ReportCreator")
+  approvals    RunReport[] @relation("ReportApprover")
+}
+
+model RunReport {
+  id                   String       @id @default(cuid())
+  status               ReportStatus @default(DRAFT)
+
+  runNumber            String?
+  patientNumber        String?
+  dateOfIncident       DateTime?
+  dispatchTime         String?
+  enrouteTime          String?
+  onSceneTime          String?
+  inServiceTime        String?
+
+  transportAgency      String?
+  incidentLocation     String?
+  natureOfRun          String?
+  chiefComplaint       String?
+
+  patientName          String?
+  patientAddress       String?
+  cityStateZip         String?
+  dateOfBirth          DateTime?
+  age                  String?
+  sex                  String?
+  race                 String?
+  primaryPhysician     String?
+
+  medications          String?
+  allergies            String?
+  patientHistory       String?
+
+  vitalSigns           Json?
+  assessment           Json?
+  treatment            Json?
+
+  narrative            String?
+
+  crew                 Json?
+
+  createdById          String
+  approvedById         String?
+
+  createdBy            StaffUser    @relation("ReportCreator", fields: [createdById], references: [id])
+  approvedBy           StaffUser?   @relation("ReportApprover", fields: [approvedById], references: [id])
+
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+  submittedAt          DateTime?
+  approvedAt           DateTime?
+  lockedAt             DateTime?
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  targetId  String?
+  details   Json?
+  createdAt DateTime @default(now())
+}

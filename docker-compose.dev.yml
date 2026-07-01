@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: newmarketvfd-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: newmarketvfd
+      POSTGRES_USER: newmarketvfd
+      POSTGRES_PASSWORD: devpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - newmarketvfd_pgdata:/var/lib/postgresql/data
+
+volumes:
+  newmarketvfd_pgdata:

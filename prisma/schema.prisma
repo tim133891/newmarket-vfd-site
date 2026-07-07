@@ -78,6 +78,7 @@ model RunReport {
   vitalSigns           Json?
   assessment           Json?
   treatment            Json?
+  refusal              Json?
 
   narrative            String?
 
